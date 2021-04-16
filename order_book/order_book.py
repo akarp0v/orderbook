@@ -8,6 +8,12 @@ class BookHandler:
         self.bin_insert(obj, objects)
 
     def get_object(self, obj_id: int, obj_type: str, objects: list):
+        if not isinstance(obj_id, int) or isinstance(obj_id, bool):
+            raise ValueError('<id> must be Integer')
+
+        if obj_id <= 0:
+            raise ValueError('<id> must be bigger than Zero')
+
         position = self.find_position(obj_id, objects)
         if position is None:
             print(f'{obj_type} #{obj_id} is not exist')
@@ -15,6 +21,7 @@ class BookHandler:
 
         obj = objects[position]
         print(f'{obj_type} #{obj.id} info: price={obj.price}, quantity={obj.quantity}')
+
         return obj
 
     def del_object(self, obj_id: int, obj_type: str, objects: list):

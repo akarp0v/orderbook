@@ -12,7 +12,7 @@ class TypesValidator:
 
 class IntValidator(TypesValidator):
     def __set__(self, instance, value):
-        if not isinstance(value, int):
+        if not isinstance(value, int) or isinstance(value, bool):
             raise ValueError(f'<{self.property_name}> must be Integer')
 
         if value <= 0:
@@ -24,7 +24,7 @@ class IntValidator(TypesValidator):
 
 class FloatValidator(TypesValidator):
     def __set__(self, instance, value):
-        if not isinstance(value, (float, int)):
+        if not isinstance(value, (float, int)) or isinstance(value, bool):
             raise ValueError(f'<{self.property_name}> must be Float or Integer')
 
         if isinstance(value, float):
