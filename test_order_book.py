@@ -188,8 +188,10 @@ def test_double_bid(order_book, price, quantity):
     assert bid.quantity == quantity * 2
 
 
-MARKET_DATA_SUIT = [{"price": random() * 1000, "quantity": randint(1, 1000)}
-                    for i in range(100)]
+MARKET_DATA_SUIT = [
+    {"price": random() * 100, "quantity": randint(1, 1000)}
+    for i in range(100)
+]
 
 
 @pytest.mark.report
