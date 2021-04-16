@@ -65,17 +65,17 @@ NEGATIVE_SET_SUIT = [
     # price
     (True, 7, Err.PRICE_TYPE),
     (None, 1, Err.PRICE_TYPE),
-    ("", 20, Err.PRICE_TYPE),
-    (" ", 2000000, Err.PRICE_TYPE),
+    ("", 99, Err.PRICE_TYPE),
+    (" ", 9999999, Err.PRICE_TYPE),
     ("1", 1001, Err.PRICE_TYPE),
     (b"1", 100, Err.PRICE_TYPE),
     (1j, 77, Err.PRICE_TYPE),
     ([], 22, Err.PRICE_TYPE),
     ((), 9, Err.PRICE_TYPE),
     ({}, 2, Err.PRICE_TYPE),
-    (-1., 5, Err.PRICE_ZERO),
-    (-1 * sys.float_info.max, 5, Err.PRICE_ZERO),
-    (0.001, 999, Err.PRICE_ZERO),
+    (-1., 555, Err.PRICE_ZERO),
+    (-1 * sys.float_info.max, 999, Err.PRICE_ZERO),
+    (0.001, 99999, Err.PRICE_ZERO),
     (0, 10, Err.PRICE_ZERO)
 ]
 
