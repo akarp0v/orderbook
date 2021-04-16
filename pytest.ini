@@ -1,0 +1,4 @@
+[pytest]
+markers =
+    positive: positive tests
+    negative: negative tests
