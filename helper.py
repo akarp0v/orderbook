@@ -3,6 +3,13 @@ from order_book import OrderBook
 
 class Helper:
     @staticmethod
+    def try_to_set_bid(book: OrderBook, price: float, quantity: int):
+        try:
+            book.set_bid(price, quantity)
+        except ValueError as err:
+            return err.args[0]
+
+    @staticmethod
     def try_to_set_ask(book: OrderBook, price: float, quantity: int):
         try:
             book.set_ask(price, quantity)
