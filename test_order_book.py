@@ -17,8 +17,12 @@ NEGATIVE_GET_SUIT = [
     ([], Err.ID_TYPE),
     ({}, Err.ID_TYPE),
     ((), Err.ID_TYPE),
+    (1., Err.ID_TYPE),
     (0, Err.ID_ZERO),
-    (-1, Err.ID_ZERO)
+    (-1, Err.ID_ZERO),
+    (-1 * sys.maxsize, Err.ID_ZERO),
+    (1, None),
+    (sys.maxsize, None)
 ]
 
 
@@ -44,7 +48,7 @@ def test_set_get_bid(h, order_book, bid_id, expect):
 
 NEGATIVE_SET_SUIT = [
     # quantity
-    (100., 2.5, Err.QUANTITY_TYPE),
+    (100., 1., Err.QUANTITY_TYPE),
     (5, True, Err.QUANTITY_TYPE),
     (1, '', Err.QUANTITY_TYPE),
     (0.1, ' ', Err.QUANTITY_TYPE),
@@ -56,7 +60,8 @@ NEGATIVE_SET_SUIT = [
     (1000000.01, {}, Err.QUANTITY_TYPE),
     (5.4, None, Err.QUANTITY_TYPE),
     (10.5, 0, Err.QUANTITY_ZERO),
-    (10.4, -1, Err.QUANTITY_ZERO),
+    (11.11, -1, Err.QUANTITY_ZERO),
+    (9999.9, -1 * sys.maxsize, Err.QUANTITY_ZERO),
     # price
     (True, 7, Err.PRICE_TYPE),
     (None, 1, Err.PRICE_TYPE),
@@ -68,7 +73,8 @@ NEGATIVE_SET_SUIT = [
     ([], 22, Err.PRICE_TYPE),
     ((), 9, Err.PRICE_TYPE),
     ({}, 2, Err.PRICE_TYPE),
-    (-1, 5, Err.PRICE_ZERO),
+    (-1., 5, Err.PRICE_ZERO),
+    (-1 * sys.float_info.max, 5, Err.PRICE_ZERO),
     (0.001, 999, Err.PRICE_ZERO),
     (0, 10, Err.PRICE_ZERO)
 ]
@@ -102,9 +108,9 @@ POSITIVE_DEL_SUIT = [
     (0.005, 1),
     (0.01, 1),
     (10., sys.maxsize),
-    (55.5, 105),
-    (sys.float_info.max, 5),
-    (1000.99, 9999),
+    (55.5, 100),
+    (sys.float_info.max, 9),
+    (10000.99, 99999),
     (100, 10)
 ]
 
