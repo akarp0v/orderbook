@@ -1,77 +1,39 @@
 from pprint import pprint
 
 from .order_object import OrderObject, Ask, Bid
+from .utils import bin_insert, find_position, format_market_data
 
 
 class BookHandler:
-    def set_object(self, obj: OrderObject, objects: list):
-        self.bin_insert(obj, objects)
+    @staticmethod
+    def set_object(obj: OrderObject, in_array: list):
+        bin_insert(obj, in_array)
 
-    def get_object(self, obj_id: int, obj_type: str, objects: list):
-        if not isinstance(obj_id, int) or isinstance(obj_id, bool):
+    @staticmethod
+    def get_object(by_id: int, from_array: list):
+        if not isinstance(by_id, int) or isinstance(by_id, bool):
             raise ValueError('<id> must be Integer')
-
-        if obj_id <= 0:
+        if by_id <= 0:
             raise ValueError('<id> must be bigger than Zero')
 
-        position = self.find_position(obj_id, objects)
+        position = find_position(by_id, from_array)
         if position is None:
-            print(f'{obj_type} #{obj_id} is not exist')
+            print(f'#{by_id} is not exist')
             return
 
-        obj = objects[position]
-        print(f'{obj_type} #{obj.id} info: price={obj.price}, quantity={obj.quantity}')
+        obj = from_array[position]
+        print(f'{obj.__class__.__name__} #{obj.id} info: price={obj.price}, quantity={obj.quantity}')
 
         return obj
 
-    def del_object(self, obj_id: int, obj_type: str, objects: list):
-        position = self.find_position(obj_id, objects)
+    @staticmethod
+    def del_object(by_id: int, from_array: list):
+        position = find_position(by_id, from_array)
         if position is None:
-            print(f'{obj_type} #{obj_id} is not exist')
+            print(f'#{by_id} is not exist')
             return
 
-        return objects.pop(position)
-
-    @staticmethod
-    def bin_insert(obj: OrderObject, in_array: list):
-        # поиск позиции для вставки элемента в массив
-        # с помощью алгоритма приближенного бинарного поиска
-        price = obj.price
-        low, mid = 0, 0  # нижний (начальный) индекс
-        high = len(in_array) - 1  # верхний (конечный) индекс
-        # как только нижний индекс станет больше на 1 верхнего
-        # или верхний на 1 меньше нижнего цикл остановится
-        while low <= high:
-            # находится индекс середины массива или отрезка массива
-            mid = (low + high) // 2
-            # Если искомое число меньше числа с индексом середины
-            if price < in_array[mid].price:
-                # то верхняя граница сдвигается к середине
-                high = mid - 1
-            # Если искомое число больше числа с индексом середины
-            elif price > in_array[mid].price:
-                # то нижняя граница сдвигается за середину
-                low = mid + 1
-            # Все остальные случаи возникают, когда искомое число
-            # равно числу с индексом mid, т.е. оно есть в массиве и найдено
-            else:
-                in_array[mid].quantity += obj.quantity
-                return
-        else:
-            if low >= len(in_array):
-                in_array.insert(low, obj)
-                return
-            if high < 0:
-                in_array.insert(0, obj)
-                return
-            pos = mid+1 if in_array[mid].price < price else mid
-            in_array.insert(pos, obj)
-
-    @staticmethod
-    def find_position(by_id: int, in_array: list):
-        for obj in in_array:
-            if obj.id == by_id:
-                return in_array.index(obj)
+        return from_array.pop(position)
 
 
 class OrderBook(BookHandler):
@@ -113,26 +75,23 @@ class OrderBook(BookHandler):
 
         return bid.id
 
-    def get_ask(self, ask_id: int):
-        return super().get_object(ask_id, 'Ask', self._asks)
+    def get_ask(self, by_id: int):
+        return super().get_object(by_id, self._asks)
 
-    def get_bid(self, bid_id: int):
-        return super().get_object(bid_id, 'Bid', self._bids)
+    def get_bid(self, by_id: int):
+        return super().get_object(by_id, self._bids)
 
-    def del_ask(self, ask_id: int):
-        return super().del_object(ask_id, 'Ask', self._asks)
+    def del_ask(self, by_id: int):
+        return super().del_object(by_id, self._asks)
 
-    def del_bid(self, bid_id: int):
-        return super().del_object(bid_id, 'Bid', self._bids)
+    def del_bid(self, by_id: int):
+        return super().del_object(by_id, self._bids)
 
     def report_market_data(self) -> dict:
-        asks = {"asks": self.format_market_data(self._asks)}
-        bids = {"bids": self.format_market_data(self._bids)}
-        market_data = {**asks, **bids}
+        market_data = {
+            **{"asks": format_market_data(self._asks)},
+            **{"bids": format_market_data(self._bids)}
+        }
         pprint(market_data)
 
         return market_data
-
-    @staticmethod
-    def format_market_data(array: list) -> list:
-        return [{"price": elem.price, "quantity": elem.quantity} for elem in array]

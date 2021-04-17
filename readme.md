@@ -32,6 +32,9 @@ pip install requirements.txt
 
 Run all tests using verbose mode
 ```
+pytest -v
+```
+```
 pytest -vs
 ```
 

@@ -29,21 +29,21 @@ NEGATIVE_GET_SUIT = [
 @pytest.mark.ask
 @pytest.mark.negative
 @pytest.mark.parametrize("ask_id, expect", NEGATIVE_GET_SUIT)
-def test_set_get_ask(h, order_book, ask_id, expect):
+def test_get_ask(h, order_book, ask_id, expect):
     book = order_book
-    response = h.try_to_get_ask(book, ask_id)
+    exception = h.try_to_get_ask(book, ask_id)
 
-    assert response == expect
+    assert exception == expect
 
 
 @pytest.mark.bid
 @pytest.mark.negative
 @pytest.mark.parametrize("bid_id, expect", NEGATIVE_GET_SUIT)
-def test_set_get_bid(h, order_book, bid_id, expect):
+def test_get_bid(h, order_book, bid_id, expect):
     book = order_book
-    response = h.try_to_get_bid(book, bid_id)
+    exception = h.try_to_get_bid(book, bid_id)
 
-    assert response == expect
+    assert exception == expect
 
 
 NEGATIVE_SET_SUIT = [
@@ -85,11 +85,9 @@ NEGATIVE_SET_SUIT = [
 @pytest.mark.parametrize("price, quantity, expect", NEGATIVE_SET_SUIT)
 def test_ask_price_quantity(h, order_book, price, quantity, expect):
     book = order_book
+    exception = h.try_to_set_ask(book, price, quantity)
 
-    # get error
-    response = h.try_to_set_ask(book, price, quantity)
-
-    assert response == expect
+    assert exception == expect
 
 
 @pytest.mark.bid
@@ -97,11 +95,9 @@ def test_ask_price_quantity(h, order_book, price, quantity, expect):
 @pytest.mark.parametrize("price, quantity, expect", NEGATIVE_SET_SUIT)
 def test_bid_price_quantity(h, order_book, price, quantity, expect):
     book = order_book
+    exception = h.try_to_set_bid(book, price, quantity)
 
-    # get error
-    response = h.try_to_set_bid(book, price, quantity)
-
-    assert response == expect
+    assert exception == expect
 
 
 POSITIVE_DEL_SUIT = [
