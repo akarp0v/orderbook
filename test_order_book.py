@@ -7,13 +7,13 @@ from const import Errors as Err
 
 
 POSITIVE_SET_GET_DEL_SUIT = [
-    (0.005, 1),
-    (0.01, 1),
-    (10., maxsize),
-    (55.5, 100),
-    (float_info.max, 9),
-    (10000.99, 99999),
-    (100, 10)
+    (0.005, 1),  # проверка округления цены до 0.01
+    (0.01, 1),  # проверка минимальной цены и количества
+    (10., maxsize),  # проверка максимального количества
+    (float_info.max, 9),  # проверка максимальной цены
+    (55.5, 50),  # проверка средних значений в диапазоне до 100
+    (99999.99, 99999),  # проверка предельных значений в диапазоне до 100000
+    (9999, 999)  # проверка целых значений
 ]
 
 
@@ -105,7 +105,7 @@ def test_del_bid_positive(order_book, price, quantity):
     assert len(bids) == 0
 
 
-POSITIVE_DOUBLE_SET_SUIT = [(99.99, 99)]
+POSITIVE_DOUBLE_SET_SUIT = [(99.99, 99)]  # предельные значения в диапазоне до 100 для повторяющихся заявок
 
 
 @pytest.mark.ask
@@ -148,6 +148,7 @@ def test_double_bid_positive(order_book, price, quantity):
     assert bid.quantity == quantity * 2
 
 
+# генерируем массив пар параметров цены и количества
 POSITIVE_MARKET_DATA_SUIT = [
     {"price": random() * 100, "quantity": randint(1, 1000)}
     for i in range(100)
@@ -178,22 +179,22 @@ def test_is_market_data_sorted(h, order_book, order_objects):
 
 
 NEGATIVE_GET_DEL_SUIT = [
-    (True, Err.ID_TYPE),
-    ('', Err.ID_TYPE),
-    (' ', Err.ID_TYPE),
-    ("1", Err.ID_TYPE),
-    (b"1", Err.ID_TYPE),
-    (1j, Err.ID_TYPE),
-    (None, Err.ID_TYPE),
-    ([], Err.ID_TYPE),
-    ({}, Err.ID_TYPE),
-    ((), Err.ID_TYPE),
-    (1., Err.ID_TYPE),
-    (0, Err.ID_ZERO),
-    (-1, Err.ID_ZERO),
-    (-1 * maxsize, Err.ID_ZERO),
-    (1, None),
-    (maxsize, None)
+    (True, Err.ID_TYPE),  # попытка передать в ID значение типа bool
+    ('', Err.ID_TYPE),  # попытка передать в ID пустую строку
+    (' ', Err.ID_TYPE),  # попытка передать в ID пробел
+    ("1", Err.ID_TYPE),  # попытка передать в ID строку
+    (b"1", Err.ID_TYPE),  # попытка передать в ID значение типа bytes
+    (1j, Err.ID_TYPE),  # попытка передать в ID значение типа complex
+    (None, Err.ID_TYPE),  # попытка передать в ID пустое значение None
+    ([], Err.ID_TYPE),  # попытка передать в ID пустой list
+    ({}, Err.ID_TYPE),  # попытка передать в ID пустой dict
+    ((), Err.ID_TYPE),  # попытка передать в ID пустой tuple
+    (1., Err.ID_TYPE),  # попытка передать в ID значение типа float
+    (0, Err.ID_ZERO),  # попытка передать в ID ноль
+    (-1, Err.ID_ZERO),  # попытка передать несуществующий ID (отрицательное значение типа integer)
+    (-1 * maxsize, Err.ID_ZERO),  # попытка передать несуществующий ID (отрицательное значение max integer)
+    (1, None),  # попытка передать несуществующий ID (положительное значение типа integer)
+    (maxsize, None)  # попытка передать несуществующий ID (положительное значение max integer)
 ]
 
 
@@ -221,35 +222,37 @@ def test_get_bid_negative(h, order_book, bid_id, expect):
 
 NEGATIVE_SET_SUIT = [
     # quantity
-    (100., 1., Err.QUANTITY_TYPE),
-    (5, True, Err.QUANTITY_TYPE),
-    (1, '', Err.QUANTITY_TYPE),
-    (0.1, ' ', Err.QUANTITY_TYPE),
-    (0.99, '1', Err.QUANTITY_TYPE),
-    (99.99, b'1', Err.QUANTITY_TYPE),
-    (99, 1j, Err.QUANTITY_TYPE),
-    (0.55, [], Err.QUANTITY_TYPE),
-    (0.01, (), Err.QUANTITY_TYPE),
-    (1000000.01, {}, Err.QUANTITY_TYPE),
-    (5.4, None, Err.QUANTITY_TYPE),
-    (10.5, 0, Err.QUANTITY_ZERO),
-    (11.11, -1, Err.QUANTITY_ZERO),
-    (9999.9, -1 * maxsize, Err.QUANTITY_ZERO),
+    (100., 1., Err.QUANTITY_TYPE),  # попытка передать в Quantity значение типа float
+    (5, True, Err.QUANTITY_TYPE),  # попытка передать в Quantity значение типа bool
+    (1, '', Err.QUANTITY_TYPE),  # попытка передать в Quantity пустую строку
+    (0.1, ' ', Err.QUANTITY_TYPE),  # попытка передать в Quantity пробел
+    (0.99, '1', Err.QUANTITY_TYPE),  # попытка передать в Quantity строку
+    (99.99, b'1', Err.QUANTITY_TYPE),  # попытка передать в Quantity значение типа bytes
+    (99, 1j, Err.QUANTITY_TYPE),  # попытка передать в Quantity значение типа complex
+    (0.55, [], Err.QUANTITY_TYPE),  # попытка передать в Quantity пустой list
+    (0.01, (), Err.QUANTITY_TYPE),  # попытка передать в Quantity пустой tuple
+    (1000000.01, {}, Err.QUANTITY_TYPE),  # попытка передать в Quantity пустой dict
+    (5.4, None, Err.QUANTITY_TYPE),  # попытка передать в Quantity пустое значение None
+    (10.5, 0, Err.QUANTITY_ZERO),  # попытка передать в Quantity ноль
+    (11.11, -1, Err.QUANTITY_ZERO),  # попытка передать в Quantity отрицательное значение типа integer
+    (9999.9, -1 * maxsize, Err.QUANTITY_ZERO),  # попытка передать в Quantity отрицательное значение max integer
     # price
-    (True, 7, Err.PRICE_TYPE),
-    (None, 1, Err.PRICE_TYPE),
-    ("", 99, Err.PRICE_TYPE),
-    (" ", 9999999, Err.PRICE_TYPE),
-    ("1", 1001, Err.PRICE_TYPE),
-    (b"1", 100, Err.PRICE_TYPE),
-    (1j, 77, Err.PRICE_TYPE),
-    ([], 22, Err.PRICE_TYPE),
-    ((), 9, Err.PRICE_TYPE),
-    ({}, 2, Err.PRICE_TYPE),
-    (-1., 555, Err.PRICE_ZERO),
-    (-1 * float_info.max, 999, Err.PRICE_ZERO),
-    (0.001, 99999, Err.PRICE_ZERO),
-    (0, 10, Err.PRICE_ZERO)
+    (True, 7, Err.PRICE_TYPE),  # попытка передать в Price значение типа bool
+    (None, 1, Err.PRICE_TYPE),  # попытка передать в Price пустое значение None
+    ("", 99, Err.PRICE_TYPE),  # попытка передать в Price пустую строку
+    (" ", 9999999, Err.PRICE_TYPE),  # попытка передать в Price пробел
+    ("1", 1001, Err.PRICE_TYPE),  # попытка передать в Price строку
+    (b"1", 100, Err.PRICE_TYPE),  # попытка передать в Price значение типа bytes
+    (1j, 77, Err.PRICE_TYPE),  # попытка передать в Price значение типа complex
+    ([], 22, Err.PRICE_TYPE),  # попытка передать в Price пустой list
+    ((), 9, Err.PRICE_TYPE),  # попытка передать в Price пустой tuple
+    ({}, 2, Err.PRICE_TYPE),  # попытка передать в Price пустой dict
+    (-0.01, 555, Err.PRICE_ZERO),  # попытка передать в Price отрицательное значение типа float
+    (-1 * float_info.max, 999, Err.PRICE_ZERO),  # попытка передать в Price отрицательное значение max float
+    (-1, 1000000, Err.PRICE_ZERO),  # попытка передать в Price отрицательное значение типа integer
+    (-1 * maxsize, 9999, Err.PRICE_ZERO),  # попытка передать в Price отрицательное значение max integer
+    (0.001, 99999, Err.PRICE_ZERO),  # попытка передать в Price значение типа float, которое должно округлится до нуля
+    (0, 10, Err.PRICE_ZERO)  # попытка передать в Price ноль
 ]
 
 
