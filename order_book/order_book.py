@@ -28,6 +28,11 @@ class BookHandler:
 
     @staticmethod
     def del_object(by_id: int, from_array: list):
+        if not isinstance(by_id, int) or isinstance(by_id, bool):
+            raise ValueError('<id> must be Integer')
+        if by_id <= 0:
+            raise ValueError('<id> must be bigger than Zero')
+
         position = find_position(by_id, from_array)
         if position is None:
             print(f'#{by_id} is not exist')
