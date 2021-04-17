@@ -83,7 +83,7 @@ NEGATIVE_SET_SUIT = [
 @pytest.mark.ask
 @pytest.mark.negative
 @pytest.mark.parametrize("price, quantity, expect", NEGATIVE_SET_SUIT)
-def test_ask_price_quantity(h, order_book, price, quantity, expect):
+def test_set_ask(h, order_book, price, quantity, expect):
     book = order_book
     exception = h.try_to_set_ask(book, price, quantity)
 
@@ -93,7 +93,7 @@ def test_ask_price_quantity(h, order_book, price, quantity, expect):
 @pytest.mark.bid
 @pytest.mark.negative
 @pytest.mark.parametrize("price, quantity, expect", NEGATIVE_SET_SUIT)
-def test_bid_price_quantity(h, order_book, price, quantity, expect):
+def test_set_bid(h, order_book, price, quantity, expect):
     book = order_book
     exception = h.try_to_set_bid(book, price, quantity)
 
