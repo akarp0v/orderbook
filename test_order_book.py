@@ -1,6 +1,6 @@
 import pytest
 from random import randint, random
-import sys
+from sys import maxsize, float_info
 
 from order_book import Ask, Bid
 from const import Errors as Err
@@ -20,9 +20,9 @@ NEGATIVE_GET_SUIT = [
     (1., Err.ID_TYPE),
     (0, Err.ID_ZERO),
     (-1, Err.ID_ZERO),
-    (-1 * sys.maxsize, Err.ID_ZERO),
+    (-1 * maxsize, Err.ID_ZERO),
     (1, None),
-    (sys.maxsize, None)
+    (maxsize, None)
 ]
 
 
@@ -61,7 +61,7 @@ NEGATIVE_SET_SUIT = [
     (5.4, None, Err.QUANTITY_TYPE),
     (10.5, 0, Err.QUANTITY_ZERO),
     (11.11, -1, Err.QUANTITY_ZERO),
-    (9999.9, -1 * sys.maxsize, Err.QUANTITY_ZERO),
+    (9999.9, -1 * maxsize, Err.QUANTITY_ZERO),
     # price
     (True, 7, Err.PRICE_TYPE),
     (None, 1, Err.PRICE_TYPE),
@@ -74,7 +74,7 @@ NEGATIVE_SET_SUIT = [
     ((), 9, Err.PRICE_TYPE),
     ({}, 2, Err.PRICE_TYPE),
     (-1., 555, Err.PRICE_ZERO),
-    (-1 * sys.float_info.max, 999, Err.PRICE_ZERO),
+    (-1 * float_info.max, 999, Err.PRICE_ZERO),
     (0.001, 99999, Err.PRICE_ZERO),
     (0, 10, Err.PRICE_ZERO)
 ]
@@ -103,9 +103,9 @@ def test_bid_price_quantity(h, order_book, price, quantity, expect):
 POSITIVE_DEL_SUIT = [
     (0.005, 1),
     (0.01, 1),
-    (10., sys.maxsize),
+    (10., maxsize),
     (55.5, 100),
-    (sys.float_info.max, 9),
+    (float_info.max, 9),
     (10000.99, 99999),
     (100, 10)
 ]
