@@ -105,7 +105,7 @@ def test_del_bid_positive(order_book, price, quantity):
     assert len(bids) == 0
 
 
-POSITIVE_DOUBLE_SET_SUIT = [(99.99, 99)]  # предельные значения в диапазоне до 100 для повторяющихся заявок
+POSITIVE_DOUBLE_SET_SUIT = [(99.99, 99)]  # цена и количество в диапазоне до 100 для повторяющихся заявок
 
 
 @pytest.mark.ask
@@ -148,7 +148,7 @@ def test_double_bid_positive(order_book, price, quantity):
     assert bid.quantity == quantity * 2
 
 
-# генерируем массив пар параметров цены и количества
+# генерируем массив случайных пар значений {"price": float, "quantity": integer}
 POSITIVE_MARKET_DATA_SUIT = [
     {"price": random() * 100, "quantity": randint(1, 1000)}
     for i in range(100)
@@ -191,8 +191,8 @@ NEGATIVE_GET_DEL_SUIT = [
     ((), Err.ID_TYPE),  # попытка передать в ID пустой tuple
     (1., Err.ID_TYPE),  # попытка передать в ID значение типа float
     (0, Err.ID_ZERO),  # попытка передать в ID ноль
-    (-1, Err.ID_ZERO),  # попытка передать несуществующий ID (отрицательное значение типа integer)
-    (-1 * maxsize, Err.ID_ZERO),  # попытка передать несуществующий ID (отрицательное значение max integer)
+    (-1, Err.ID_ZERO),  # попытка передать в ID отрицательное значение типа integer
+    (-1 * maxsize, Err.ID_ZERO),  # попытка передать в ID отрицательное значение max integer
     (1, None),  # попытка передать несуществующий ID (положительное значение типа integer)
     (maxsize, None)  # попытка передать несуществующий ID (положительное значение max integer)
 ]
