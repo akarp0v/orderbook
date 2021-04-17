@@ -70,14 +70,16 @@ def test_del_ask_positive(order_book, price, quantity):
     ask_id = book.set_ask(price, quantity)
     # get ask
     ask = book.get_ask(ask_id)
-    assert isinstance(ask, Ask)
-    assert ask.id == ask_id
     # delete ask
     deleted_ask = book.del_ask(ask_id)
-    assert isinstance(deleted_ask, Ask)
-    assert deleted_ask.id == ask_id
+    # get market_data
+    market_data = book.report_market_data()
+    asks = market_data['asks']
 
+    assert isinstance(deleted_ask, Ask)
+    assert deleted_ask.id == ask.id
     assert book.get_ask(ask_id) is None
+    assert len(asks) == 0
 
 
 @pytest.mark.bid
@@ -91,14 +93,16 @@ def test_del_bid_positive(order_book, price, quantity):
     bid_id = book.set_bid(price, quantity)
     # get bid
     bid = book.get_bid(bid_id)
-    assert isinstance(bid, Bid)
-    assert bid.id == bid_id
     # delete bid
     deleted_bid = book.del_bid(bid_id)
-    assert isinstance(deleted_bid, Bid)
-    assert deleted_bid.id == bid_id
+    # get market_data
+    market_data = book.report_market_data()
+    bids = market_data['bids']
 
+    assert isinstance(deleted_bid, Bid)
+    assert deleted_bid.id == bid.id
     assert book.get_bid(bid_id) is None
+    assert len(bids) == 0
 
 
 POSITIVE_DOUBLE_SET_SUIT = [(99.99, 99)]
