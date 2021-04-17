@@ -22,16 +22,16 @@ POSITIVE_SET_GET_DEL_SUIT = [
 @pytest.mark.parametrize("price, quantity",
                          POSITIVE_SET_GET_DEL_SUIT)
 def test_set_get_ask_positive(h, order_book, price, quantity):
+    # arrange
     book = order_book
 
-    # set ask
+    # act
     ask_id = book.set_ask(price, quantity)
-    # get ask
     ask = book.get_ask(ask_id)
-    # get market_data
     market_data = book.report_market_data()
     asks = market_data['asks']
 
+    # assert
     assert isinstance(ask, Ask)
     assert ask_id == ask.id
     assert len(asks) == 1
@@ -43,16 +43,16 @@ def test_set_get_ask_positive(h, order_book, price, quantity):
 @pytest.mark.parametrize("price, quantity",
                          POSITIVE_SET_GET_DEL_SUIT)
 def test_set_get_bid_positive(h, order_book, price, quantity):
+    # arrange
     book = order_book
 
-    # set bid
+    # act
     bid_id = book.set_bid(price, quantity)
-    # get bid
     bid = book.get_bid(bid_id)
-    # get market_data
     market_data = book.report_market_data()
     bids = market_data['bids']
 
+    # assert
     assert isinstance(bid, Bid)
     assert bid_id == bid.id
     assert len(bids) == 1
@@ -64,18 +64,17 @@ def test_set_get_bid_positive(h, order_book, price, quantity):
 @pytest.mark.parametrize("price, quantity",
                          POSITIVE_SET_GET_DEL_SUIT)
 def test_del_ask_positive(order_book, price, quantity):
+    # arrange
     book = order_book
 
-    # set ask
+    # act
     ask_id = book.set_ask(price, quantity)
-    # get ask
     ask = book.get_ask(ask_id)
-    # delete ask
     deleted_ask = book.del_ask(ask_id)
-    # get market_data
     market_data = book.report_market_data()
     asks = market_data['asks']
 
+    # assert
     assert isinstance(deleted_ask, Ask)
     assert deleted_ask.id == ask.id
     assert book.get_ask(ask_id) is None
@@ -87,18 +86,17 @@ def test_del_ask_positive(order_book, price, quantity):
 @pytest.mark.parametrize("price, quantity",
                          POSITIVE_SET_GET_DEL_SUIT)
 def test_del_bid_positive(order_book, price, quantity):
+    # arrange
     book = order_book
 
-    # set bid
+    # act
     bid_id = book.set_bid(price, quantity)
-    # get bid
     bid = book.get_bid(bid_id)
-    # delete bid
     deleted_bid = book.del_bid(bid_id)
-    # get market_data
     market_data = book.report_market_data()
     bids = market_data['bids']
 
+    # assert
     assert isinstance(deleted_bid, Bid)
     assert deleted_bid.id == bid.id
     assert book.get_bid(bid_id) is None
@@ -113,16 +111,17 @@ POSITIVE_DOUBLE_SET_SUIT = [(99.99, 99)]  # цена и количество в 
 @pytest.mark.parametrize("price, quantity",
                          POSITIVE_DOUBLE_SET_SUIT)
 def test_double_ask_positive(order_book, price, quantity):
+    # arrange
     book = order_book
 
-    # set identical asks
+    # act
     ask_id = book.set_ask(price, quantity)
     book.set_ask(price, quantity)
     ask = book.get_ask(ask_id)
-    # get market_data
     market_data = book.report_market_data()
     asks = market_data['asks']
 
+    # assert
     assert len(asks) == 1
     assert ask.price == price
     assert ask.quantity == quantity * 2
@@ -133,16 +132,17 @@ def test_double_ask_positive(order_book, price, quantity):
 @pytest.mark.parametrize("price, quantity",
                          POSITIVE_DOUBLE_SET_SUIT)
 def test_double_bid_positive(order_book, price, quantity):
+    # arrange
     book = order_book
 
-    # set identical bids
+    # act
     bid_id = book.set_bid(price, quantity)
     book.set_bid(price, quantity)
     bid = book.get_bid(bid_id)
-    # get market_data
     market_data = book.report_market_data()
     bids = market_data['bids']
 
+    # assert
     assert len(bids) == 1
     assert bid.price == price
     assert bid.quantity == quantity * 2
@@ -160,19 +160,21 @@ POSITIVE_MARKET_DATA_SUIT = [
 @pytest.mark.parametrize("order_objects",
                          [POSITIVE_MARKET_DATA_SUIT])
 def test_is_market_data_sorted(h, order_book, order_objects):
+    # arrange
     book = order_book
 
-    # fill asks and bids
+    # act
     for obj in order_objects:
         price = obj['price']
         quantity = obj['quantity']
         book.set_ask(price, quantity)
         book.set_bid(price, quantity)
-    # get market_data
+
     market_data = book.report_market_data()
     asks = market_data['asks']
     bids = market_data['bids']
 
+    # assert
     assert h.is_sorted_by_price(asks)
     assert h.is_sorted_by_price(bids)
     assert asks == bids
@@ -203,9 +205,13 @@ NEGATIVE_GET_DEL_SUIT = [
 @pytest.mark.parametrize("ask_id, expect",
                          NEGATIVE_GET_DEL_SUIT)
 def test_get_ask_negative(h, order_book, ask_id, expect):
+    # arrange
     book = order_book
+
+    # act
     exception = h.try_to_get_ask(book, ask_id)
 
+    # assert
     assert exception == expect
 
 
@@ -214,9 +220,13 @@ def test_get_ask_negative(h, order_book, ask_id, expect):
 @pytest.mark.parametrize("bid_id, expect",
                          NEGATIVE_GET_DEL_SUIT)
 def test_get_bid_negative(h, order_book, bid_id, expect):
+    # arrange
     book = order_book
+
+    # act
     exception = h.try_to_get_bid(book, bid_id)
 
+    # assert
     assert exception == expect
 
 
@@ -261,9 +271,13 @@ NEGATIVE_SET_SUIT = [
 @pytest.mark.parametrize("price, quantity, expect",
                          NEGATIVE_SET_SUIT)
 def test_set_ask_negative(h, order_book, price, quantity, expect):
+    # arrange
     book = order_book
+
+    # act
     exception = h.try_to_set_ask(book, price, quantity)
 
+    # assert
     assert exception == expect
 
 
@@ -272,9 +286,13 @@ def test_set_ask_negative(h, order_book, price, quantity, expect):
 @pytest.mark.parametrize("price, quantity, expect",
                          NEGATIVE_SET_SUIT)
 def test_set_bid_negative(h, order_book, price, quantity, expect):
+    # arrange
     book = order_book
+
+    # act
     exception = h.try_to_set_bid(book, price, quantity)
 
+    # assert
     assert exception == expect
 
 
@@ -283,9 +301,13 @@ def test_set_bid_negative(h, order_book, price, quantity, expect):
 @pytest.mark.parametrize("ask_id, expect",
                          NEGATIVE_GET_DEL_SUIT)
 def test_del_ask_negative(h, order_book, ask_id, expect):
+    # arrange
     book = order_book
+
+    # act
     exception = h.try_to_del_ask(book, ask_id)
 
+    # assert
     assert exception == expect
 
 
@@ -294,7 +316,11 @@ def test_del_ask_negative(h, order_book, ask_id, expect):
 @pytest.mark.parametrize("bid_id, expect",
                          NEGATIVE_GET_DEL_SUIT)
 def test_del_bid_negative(h, order_book, bid_id, expect):
+    # arrange
     book = order_book
+
+    # act
     exception = h.try_to_del_bid(book, bid_id)
 
+    # assert
     assert exception == expect
